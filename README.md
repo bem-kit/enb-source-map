@@ -3,7 +3,9 @@ enb-source-map [![Build Status](https://travis-ci.org/enb-make/enb-source-map.pn
 
 # Using
 
-file.writeFileContent
+call `file.writeFileContent(filePath, fileContent)` for adding information about source file.
+
+See details in [specs](/tests/).
 
 # Test
 npm test
