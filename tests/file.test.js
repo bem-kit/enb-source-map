@@ -1,13 +1,14 @@
 var path = require('path');
 require('chai').should();
-var File = require('../lib/file');
+var BundleGenerator = require('../lib/bundleGenerator.js');
 var SourceLocator = require('../lib/source-locator');
+var testHelpers = {};
 
-describe('File', function () {
+describe('BundleGenerator', function () {
     var file;
     describe('without source map', function () {
         beforeEach(function () {
-            file = new File('1.js', false);
+            file = new BundleGenerator('1.js', false);
         });
 
         describe('writeLine()', function () {
@@ -34,40 +35,40 @@ describe('File', function () {
             });
         });
 
-        describe('write()', function () {
+        describe('_write()', function () {
             it('should add content to the output', function () {
-                file.write('1');
-                file.write('2');
-                file.write('3\n');
-                file.write('4\n5');
+                file._write('1');
+                file._write('2');
+                file._write('3\n');
+                file._write('4\n5');
                 file.render().should.equal('123\n4\n5');
             });
 
             it('should move cursor forward', function () {
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(0);
-                file.write('123');
+                file._write('123');
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(3);
-                file.write('456');
+                file._write('456');
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(6);
-                file.write('\n');
+                file._write('\n');
                 file.getCursor().line.should.equal(2);
                 file.getCursor().column.should.equal(0);
-                file.write('\n\n');
+                file._write('\n\n');
                 file.getCursor().line.should.equal(4);
                 file.getCursor().column.should.equal(0);
-                file.write('\n123');
+                file._write('\n123');
                 file.getCursor().line.should.equal(5);
                 file.getCursor().column.should.equal(3);
             });
         });
 
-        describe('writeFileFragment()', function () {
+        describe('_writeFileFragment()', function () {
             it('should add content to the output', function () {
-                file.writeFileFragment('2.js', 'line 1\nline 2', 1, 0);
-                file.writeFileFragment('2.js', 'line 3\nline 4', 2, 0);
+                file._writeFileFragment('2.js', 'line 1\nline 2', 1, 0);
+                file._writeFileFragment('2.js', 'line 3\nline 4', 2, 0);
                 file.render().should.equal('line 1\nline 2line 3\nline 4');
             });
         });
@@ -75,15 +76,15 @@ describe('File', function () {
 
     describe('with source map', function () {
         beforeEach(function () {
-            file = new File('1.js', true);
+            file = new BundleGenerator('1.js', true);
         });
 
         describe('writeLine()', function () {
             it('should add a new line to the output', function () {
                 file.writeLine('line 1');
                 file.writeLine('line 2');
-                hasSourceMap(file.render()).should.equal(true);
-                stripSourceMap(file.render()).should.equal('line 1\nline 2\n');
+                testHelpers.hasSourceMap(file.render()).should.equal(true);
+                testHelpers.stripSourceMap(file.render()).should.equal('line 1\nline 2\n');
             });
         });
 
@@ -91,8 +92,8 @@ describe('File', function () {
             it('should add content to the output', function () {
                 file.writeContent('line 1\nline 2');
                 file.writeContent('line 3\nline 4');
-                hasSourceMap(file.render()).should.equal(true);
-                stripSourceMap(file.render()).should.equal('line 1\nline 2\nline 3\nline 4\n');
+                testHelpers.hasSourceMap(file.render()).should.equal(true);
+                testHelpers.stripSourceMap(file.render()).should.equal('line 1\nline 2\nline 3\nline 4\n');
             });
         });
 
@@ -100,49 +101,49 @@ describe('File', function () {
             it('should add content to the output', function () {
                 file.writeFileContent('2.js', 'line 1\nline 2');
                 file.writeFileContent('2.js', 'line 3\nline 4');
-                hasSourceMap(file.render()).should.equal(true);
-                stripSourceMap(file.render()).should.equal('line 1\nline 2\nline 3\nline 4\n');
+                testHelpers.hasSourceMap(file.render()).should.equal(true);
+                testHelpers.stripSourceMap(file.render()).should.equal('line 1\nline 2\nline 3\nline 4\n');
             });
         });
 
-        describe('write()', function () {
+        describe('_write()', function () {
             it('should add content to the output', function () {
-                file.write('1');
-                file.write('2');
-                file.write('3\n');
-                file.write('4\n5\n');
-                hasSourceMap(file.render()).should.equal(true);
-                stripSourceMap(file.render()).should.equal('123\n4\n5\n');
+                file._write('1');
+                file._write('2');
+                file._write('3\n');
+                file._write('4\n5\n');
+                testHelpers.hasSourceMap(file.render()).should.equal(true);
+                testHelpers.stripSourceMap(file.render()).should.equal('123\n4\n5\n');
             });
 
             it('should move cursor forward', function () {
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(0);
-                file.write('123');
+                file._write('123');
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(3);
-                file.write('456');
+                file._write('456');
                 file.getCursor().line.should.equal(1);
                 file.getCursor().column.should.equal(6);
-                file.write('\n');
+                file._write('\n');
                 file.getCursor().line.should.equal(2);
                 file.getCursor().column.should.equal(0);
-                file.write('\n\n');
+                file._write('\n\n');
                 file.getCursor().line.should.equal(4);
                 file.getCursor().column.should.equal(0);
-                file.write('\n123');
+                file._write('\n123');
                 file.getCursor().line.should.equal(5);
                 file.getCursor().column.should.equal(3);
             });
         });
 
-        describe('writeFileFragment()', function () {
+        describe('_writeFileFragment()', function () {
             it('should add content to the output', function () {
-                file.write('_');
-                file.writeFileFragment('2.js', 'line 1\nline 2', 1, 0);
-                file.writeFileFragment('3.js', 'line 3\nline 4', 2, 3);
-                hasSourceMap(file.render()).should.equal(true);
-                stripSourceMap(file.render()).should.equal('_line 1\nline 2line 3\nline 4\n');
+                file._write('_');
+                file._writeFileFragment('2.js', 'line 1\nline 2', 1, 0);
+                file._writeFileFragment('3.js', 'line 3\nline 4', 2, 3);
+                testHelpers.hasSourceMap(file.render()).should.equal(true);
+                testHelpers.stripSourceMap(file.render()).should.equal('_line 1\nline 2line 3\nline 4\n');
 
                 var locator = new SourceLocator('1.js', file.render());
                 var loc1 = locator.locate(1, 0);
@@ -209,13 +210,13 @@ describe('File', function () {
     });
 });
 
-function hasSourceMap(source) {
+testHelpers.hasSourceMap = function hasSourceMap(source) {
     var lines = source.split('\n');
     return lines[lines.length - 1].indexOf('//# sourceMappingURL=') === 0;
-}
+};
 
-function stripSourceMap(source) {
+testHelpers.stripSourceMap = function stripSourceMap(source) {
     var lines = source.split('\n');
     lines.pop();
     return lines.join('\n') + '\n';
-}
+};
