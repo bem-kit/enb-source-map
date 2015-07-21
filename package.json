@@ -7,7 +7,7 @@
     "unit": "mocha tests",
     "check-style": "jscs -c node_modules/enb-validate-code/jscs.json lib"
   },
-  "main": "lib/bundleGenerator.js"
+  "main": "lib/bundleGenerator.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/enb-make/enb-source-map.git"
