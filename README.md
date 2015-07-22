@@ -1,6 +1,3 @@
-enb-source-map
-==========
-
 ## Using
 
 call `file.writeFileContent(filePath, fileContent)` for adding information about source file.
