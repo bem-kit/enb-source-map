@@ -13,4 +13,4 @@ npm test
 ## About this fork
 Current fork contain addition comments, renamed methods and no important changes.
 
-Thanks to @mdevils
+Thanks to [Marat Dulin @mdevils](https://github.com/mdevils)
